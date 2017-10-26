@@ -36,6 +36,12 @@ router.post("/shows", function(req, res, next) {
 });
 
 router.put("/shows/:id", function(req, res, next) {
+  // ** MARK ** This "if" statement checks to see if an "id" property exists and if so, sends an error.
+  if (req.body.hasOwnProperty("id")) {
+    return res.status(422).json({
+      error: "You cannot update the id field"
+    });
+  }
   queries
     .updateShow(req.params.id, req.body)
     .then(function() {
@@ -43,6 +49,24 @@ router.put("/shows/:id", function(req, res, next) {
     })
     .then(function(show) {
       res.status(200).json(show);
+    })
+    .catch(function(error) {
+      next(error);
+    });
+});
+
+router.delete("/shows/:id", function(req, res, next) {
+  queries
+    .getSingle(req.params.id)
+    .then(function(show) {
+      queries
+        .deleteShow(req.params.id)
+        .then(function() {
+          res.status(200).json(show);
+        })
+        .catch(function(error) {
+          next(error);
+        });
     })
     .catch(function(error) {
       next(error);

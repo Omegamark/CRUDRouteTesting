@@ -26,9 +26,16 @@ function updateShow(showID, updates) {
     .update(updates);
 }
 
+function deleteShow(showID) {
+  return Shows()
+    .where("id", parseInt(showID))
+    .del();
+}
+
 module.exports = {
   getAll,
   getSingle,
   addShow,
-  updateShow
+  updateShow,
+  deleteShow
 };
